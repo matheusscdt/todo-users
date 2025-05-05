@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Task;
 use Illuminate\Http\Request;
+use App\Http\Requests\TaskRequest;
 
 /**
  * Class TaskController
@@ -29,20 +30,12 @@ class TaskController extends Controller
     /**
      * Store a newly created task in storage.
      *
-     * @param \Illuminate\Http\Request $request
+     * @param \App\Http\Requests\TaskRequest $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(TaskRequest $request)
     {
-        $validated = $request->validate([
-            'title' => 'required|string|max:255',
-            'description' => 'nullable|string',
-            'status' => 'required|in:pending,in_progress,completed',
-            'due_date' => 'nullable|date',
-            'user_id' => 'required|exists:users,id',
-        ]);
-
-        $task = Task::create($validated);
+        $task = Task::create($request->validated());
         return response()->json($task, 201);
     }
 
@@ -63,24 +56,14 @@ class TaskController extends Controller
     /**
      * Update the specified task in storage.
      *
-     * @param \Illuminate\Http\Request $request
+     * @param \App\Http\Requests\TaskRequest $request
      * @param int $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(TaskRequest $request, $id)
     {
         $task = Task::findOrFail($id);
-        $this->authorize($task);
-
-        $validated = $request->validate([
-            'title' => 'sometimes|required|string|max:255',
-            'description' => 'nullable|string',
-            'status' => 'sometimes|required|in:pending,in_progress,completed', 
-            'due_date' => 'nullable|date',
-            'user_id' => 'sometimes|required|exists:users,id',
-        ]);
-
-        $task->update($validated);
+        $task->update($request->validated());
         return response()->json($task);
     }
 

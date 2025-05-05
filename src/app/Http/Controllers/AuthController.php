@@ -6,8 +6,19 @@ use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
 
+/**
+ * Class AuthController
+ *
+ * Handles user authentication and registration.
+ */
 class AuthController extends Controller
 {
+    /**
+     * Register a new user.
+     *
+     * @param \Illuminate\Http\Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function register(Request $request)
     {
         $request->validate([
@@ -25,6 +36,12 @@ class AuthController extends Controller
         return response()->json(['user' => $user], 201);
     }
 
+    /**
+     * Log in a user and return an authentication token.
+     *
+     * @param \Illuminate\Http\Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function login(Request $request)
     {
         $request->validate([
@@ -45,6 +62,12 @@ class AuthController extends Controller
         return response()->json(['token' => $token], 200);
     }
 
+    /**
+     * Log out the authenticated user.
+     *
+     * @param \Illuminate\Http\Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function logout(Request $request)
     {
         $request->user()->currentAccessToken()->delete();

@@ -10,8 +10,11 @@ use Illuminate\Http\Request;
  *
  * Handles operations related to tasks.
  */
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+
 class TaskController extends Controller
 {
+    use AuthorizesRequests;
     /**
      * Display a listing of the tasks.
      *
@@ -51,7 +54,9 @@ class TaskController extends Controller
      */
     public function show($id)
     {
-        $task = Task::with('user')->findOrFail($id);
+        $task = Task::findOrFail($id);
+        $this->authorize('view', $task);
+
         return response()->json($task);
     }
 
@@ -64,15 +69,17 @@ class TaskController extends Controller
      */
     public function update(Request $request, $id)
     {
+        $task = Task::findOrFail($id);
+        $this->authorize($task);
+
         $validated = $request->validate([
             'title' => 'sometimes|required|string|max:255',
             'description' => 'nullable|string',
-            'status' => 'sometimes|required|in:pending,in_progress,completed',
+            'status' => 'sometimes|required|in:pending,in_progress,completed', 
             'due_date' => 'nullable|date',
             'user_id' => 'sometimes|required|exists:users,id',
         ]);
 
-        $task = Task::findOrFail($id);
         $task->update($validated);
         return response()->json($task);
     }
@@ -86,6 +93,8 @@ class TaskController extends Controller
     public function destroy($id)
     {
         $task = Task::findOrFail($id);
+        $this->authorize('delete', $task);
+
         $task->delete();
         return response()->json(['message' => 'Task deleted successfully']);
     }

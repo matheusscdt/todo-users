@@ -33,17 +33,19 @@ class TaskController extends Controller
     /**
      * Display a listing of the tasks for the logged-in user.
      *
+     * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
         if (!Auth::check()) {
             return response(redirect()->route('welcome')->with('error', 'You must be logged in to view tasks.'));
         }
 
-        $tasks = Task::where('user_id', Auth::id())->get();
+        $tasks = Task::where('user_id', Auth::id())
+            ->paginate($request->get('per_page', 10));
 
-        return response()->json(['tasks' => $tasks]);
+        return response()->json($tasks);
     }
 
     /**

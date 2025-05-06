@@ -38,23 +38,6 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach ($tasks as $task)
-                                    <tr>
-                                        <td>{{ $task->id }}</td>
-                                        <td>{{ $task->title }}</td>
-                                        <td>{{ $task->description }}</td>
-                                        <td>{{ $task->status }}</td>
-                                        <td>{{ $task->due_date }}</td>
-                                        <td>
-                                            <a href="/tasks/{{ $task->id }}/edit" class="btn btn-sm btn-warning">Edit</a>
-                                            <form action="/tasks/{{ $task->id }}" method="POST" style="display:inline;">
-                                                @csrf
-                                                @method('DELETE')
-                                                <button type="submit" class="btn btn-sm btn-danger">Delete</button>
-                                            </form>
-                                        </td>
-                                    </tr>
-                                @endforeach
                             </tbody>
                         </table>
                     </div>
@@ -62,5 +45,54 @@
             </div>
         </div>
     </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const tasksTableBody = document.querySelector('tbody');
+            const paginationContainer = document.createElement('div');
+            paginationContainer.classList.add('mt-3', 'text-center');
+            document.querySelector('.card-body').appendChild(paginationContainer);
+
+            function fetchTasks(page = 1) {
+                fetch(`/api/tasks?page=${page}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        tasksTableBody.innerHTML = '';
+                        data.data.forEach(task => {
+                            const row = document.createElement('tr');
+                            row.innerHTML = `
+                                <td>${task.id}</td>
+                                <td>${task.title}</td>
+                                <td>${task.description}</td>
+                                <td>${task.status}</td>
+                                <td>${task.due_date}</td>
+                                <td>
+                                    <a href="/tasks/${task.id}/edit" class="btn btn-sm btn-warning">Edit</a>
+                                    <form action="/tasks/${task.id}" method="POST" style="display:inline;">
+                                        <input type="hidden" name="_method" value="DELETE">
+                                        <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                                        <button type="submit" class="btn btn-sm btn-danger">Delete</button>
+                                    </form>
+                                </td>
+                            `;
+                            tasksTableBody.appendChild(row);
+                        });
+
+                        paginationContainer.innerHTML = '';
+                        for (let i = 1; i <= data.last_page; i++) {
+                            const button = document.createElement('button');
+                            button.textContent = i;
+                            button.classList.add('btn', 'btn-sm', 'btn-primary', 'mx-1');
+                            if (i === data.current_page) {
+                                button.disabled = true;
+                            }
+                            button.addEventListener('click', () => fetchTasks(i));
+                            paginationContainer.appendChild(button);
+                        }
+                    });
+            }
+
+            fetchTasks();
+        });
+    </script>
 </body>
 </html>

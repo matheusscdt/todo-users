@@ -20,3 +20,5 @@ Route::middleware(['web'])->group(function () {
 
     Route::get('logout', [AuthController::class, 'logout'])->name('auth.logout');
 });
+
+Route::get('/api/tasks', [TaskController::class, 'index'])->name('api.tasks');

@@ -22,3 +22,11 @@ Route::middleware(['web'])->group(function () {
 });
 
 Route::get('/api/tasks', [TaskController::class, 'index'])->name('api.tasks');
+
+Route::get('/api/documentation', function () {
+    return response()->file(public_path('docs/api.json'));
+});
+
+Route::get('/api/docs', function () {
+    return view('documentation');
+});

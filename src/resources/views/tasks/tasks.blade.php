@@ -82,14 +82,27 @@
             </div>
         </div>
     </div>
+
+    <div id="loading-spinner" style="display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 1000;">
+        <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">Loading...</span>
+        </div>
+    </div>
+
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             const tasksTableBody = document.querySelector('tbody');
             const paginationContainer = document.createElement('div');
+            const loadingSpinner = document.getElementById('loading-spinner');
             paginationContainer.classList.add('mt-3', 'text-center');
             document.querySelector('.card-body').appendChild(paginationContainer);
 
+            function toggleSpinner(show) {
+                loadingSpinner.style.display = show ? 'block' : 'none';
+            }
+
             function fetchTasks(page = 1) {
+                toggleSpinner(true);
                 const formData = new FormData(document.getElementById('filters-form'));
                 const params = new URLSearchParams(formData).toString();
 
@@ -128,7 +141,8 @@
                             button.addEventListener('click', () => fetchTasks(i));
                             paginationContainer.appendChild(button);
                         }
-                    });
+                    })
+                    .finally(() => toggleSpinner(false));
             }
 
             fetchTasks();

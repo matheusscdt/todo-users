@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\Task;
 use Illuminate\Http\Request;
 use App\Http\Requests\TaskRequest;
+use Illuminate\Support\Facades\Auth;
+use App\Services\TaskService;
 
 /**
  * Class TaskController
@@ -16,6 +18,14 @@ use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 class TaskController extends Controller
 {
     use AuthorizesRequests;
+
+    private $taskService;
+
+    public function __construct(TaskService $taskService)
+    {
+        $this->taskService = $taskService;
+    }
+
     /**
      * Display a listing of the tasks.
      *
@@ -35,7 +45,10 @@ class TaskController extends Controller
      */
     public function store(TaskRequest $request)
     {
-        $task = Task::create($request->validated());
+        $data = $request->validated();
+        $data['user_id'] = Auth::user()->id;
+
+        $task = $this->taskService->createTask($data);
         return response()->json($task, 201);
     }
 
@@ -78,7 +91,7 @@ class TaskController extends Controller
         $task = Task::findOrFail($id);
         $this->authorize('delete', $task);
 
-        $task->delete();
+        $this->taskService->deleteTask($task);
         return response()->json(['message' => 'Task deleted successfully']);
     }
 }

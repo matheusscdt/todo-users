@@ -2,7 +2,8 @@
 
 namespace Tests\Unit;
 
-use PHPUnit\Framework\TestCase;
+use Tests\TestCase;
+use Illuminate\Support\Facades\DB;
 
 class ExampleTest extends TestCase
 {
@@ -11,6 +12,6 @@ class ExampleTest extends TestCase
      */
     public function test_that_true_is_true(): void
     {
-        $this->assertTrue(true);
+        $this->assertEquals(':memory:', DB::connection()->getDatabaseName());
     }
 }

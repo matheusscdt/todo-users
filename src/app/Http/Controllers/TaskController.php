@@ -8,8 +8,8 @@ use App\Http\Requests\TaskRequest;
 use Illuminate\Support\Facades\Auth;
 use App\Services\TaskService;
 use Illuminate\Contracts\View\View;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Http\Response;
 
 /**
  * Class TaskController
@@ -58,7 +58,7 @@ class TaskController extends Controller
 
         $tasks = $query->paginate($request->get('per_page', 10));
 
-        return response()->json($tasks);
+        return response()->json($tasks, Response::HTTP_OK);
     }
 
     /**
@@ -98,7 +98,7 @@ class TaskController extends Controller
         $task = Task::findOrFail($id);
         $this->authorize('view', $task);
 
-        return response()->json($task);
+        return response()->json($task, Response::HTTP_OK);
     }
 
     /**
@@ -127,7 +127,7 @@ class TaskController extends Controller
         $task = Task::findOrFail($id);
 
         if (Gate::denies('update', $task)) {
-            return response()->json(['error' => 'You are not authorized to update this task.'], 403);
+            return response()->json(['error' => 'You are not authorized to update this task.'], Response::HTTP_FORBIDDEN);
         }
 
         $task->update($request->validated());

@@ -7,6 +7,7 @@ use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
+use Illuminate\Http\Response;
 
 /**
  * Class AuthController
@@ -35,7 +36,7 @@ class AuthController extends Controller
             'password' => Hash::make($request->password),
         ]);
 
-        return response()->json(['user' => $user], 201);
+        return response()->json(['user' => $user], Response::HTTP_CREATED);
     }
 
     /**
@@ -61,7 +62,7 @@ class AuthController extends Controller
 
         $token = $user->createToken('auth_token')->plainTextToken;
 
-        return response()->json(['token' => $token], 200);
+        return response()->json(['token' => $token], Response::HTTP_OK);
     }
 
     public function login(Request $request)
@@ -98,10 +99,10 @@ class AuthController extends Controller
             return redirect()->route('auth.login');
         } elseif ($request->user()) {
             $request->user()->currentAccessToken()->delete();
-            return response()->json(['message' => 'Logged out'], 200);
+            return response()->json(['message' => 'Logged out'], Response::HTTP_OK);
         }
 
-        return response()->json(['message' => 'Not authenticated'], 401);
+        return response()->json(['message' => 'Not authenticated'], Response::HTTP_UNAUTHORIZED);
     }
 
     /**
@@ -114,7 +115,7 @@ class AuthController extends Controller
     {
         $request->user()->currentAccessToken()->delete();
 
-        return response()->json(['message' => 'Logged out'], 200);
+        return response()->json(['message' => 'Logged out'], Response::HTTP_OK);
     }
 
     /**

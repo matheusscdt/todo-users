@@ -3,11 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use App\Http\Requests\UserRequest;
-
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+use Illuminate\Http\Response;
 
 class UserController extends Controller
 {
@@ -21,7 +20,7 @@ class UserController extends Controller
     public function index()
     {
         $users = User::all();
-        return response()->json($users);
+        return response()->json($users, Response::HTTP_OK);
     }
 
     public function show($id)
@@ -29,7 +28,7 @@ class UserController extends Controller
         $user = User::findOrFail($id);
         $this->authorize('view', $user);
 
-        return response()->json($user);
+        return response()->json($user, Response::HTTP_OK);
     }
 
     public function update(UserRequest $request, $id)
@@ -44,7 +43,7 @@ class UserController extends Controller
         }
 
         $user->update($validated);
-        return response()->json($user);
+        return response()->json($user, Response::HTTP_OK);
     }
 
     public function destroy($id)
@@ -53,6 +52,6 @@ class UserController extends Controller
         $this->authorize('delete', $user);
 
         $user->delete();
-        return response()->json(['message' => 'User deleted successfully']);
+        return response()->json(['message' => 'User deleted successfully'], Response::HTTP_OK);
     }
 }

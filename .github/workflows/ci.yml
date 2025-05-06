@@ -25,7 +25,9 @@ jobs:
         coverage: none
 
     - name: Install dependencies
-      run: composer install --prefer-dist --no-progress --no-suggest
+      run: |
+        cd src
+        composer install --prefer-dist --no-progress
 
     - name: Run migrations
       run: php artisan migrate --database=sqlite --force

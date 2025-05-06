@@ -42,8 +42,21 @@ class TaskController extends Controller
             return response(redirect()->route('welcome')->with('error', 'You must be logged in to view tasks.'));
         }
 
-        $tasks = Task::where('user_id', Auth::id())
-            ->paginate($request->get('per_page', 10));
+        $query = Task::where('user_id', Auth::id());
+
+        if ($request->filled('title')) {
+            $query->where('title', 'like', '%' . $request->title . '%');
+        }
+
+        if ($request->filled('start_date') && $request->filled('end_date')) {
+            $query->whereBetween('due_date', [$request->start_date, $request->end_date]);
+        }
+
+        if ($request->filled('status')) {
+            $query->where('status', $request->status);
+        }
+
+        $tasks = $query->paginate($request->get('per_page', 10));
 
         return response()->json($tasks);
     }

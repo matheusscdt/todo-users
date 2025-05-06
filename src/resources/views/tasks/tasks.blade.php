@@ -31,6 +31,30 @@
                         <div class="mb-3 text-end">
                             <a href="{{ route('tasks.create') }}" class="btn btn-success">Create Task</a>
                         </div>
+                        <div class="mb-3">
+                            <form id="filters-form" class="row g-3">
+                                <div class="col-md-4">
+                                    <input type="text" name="title" class="form-control" placeholder="Filter by Title">
+                                </div>
+                                <div class="col-md-3">
+                                    <input type="date" name="start_date" class="form-control" placeholder="Start Date" title="Start Date (From)">
+                                </div>
+                                <div class="col-md-3">
+                                    <input type="date" name="end_date" class="form-control" placeholder="End Date" title="End Date (To)">
+                                </div>
+                                <div class="col-md-2">
+                                    <select name="status" class="form-select">
+                                        <option value="">All Status</option>
+                                        <option value="pending">Pending</option>
+                                        <option value="in_progress">In Progress</option>
+                                        <option value="completed">Completed</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-12 text-end">
+                                    <button type="button" id="apply-filters" class="btn btn-primary">Apply Filters</button>
+                                </div>
+                            </form>
+                        </div>
                         <table class="table table-striped table-responsive">
                             <thead>
                                 <tr>
@@ -58,7 +82,10 @@
             document.querySelector('.card-body').appendChild(paginationContainer);
 
             function fetchTasks(page = 1) {
-                fetch(`/api/tasks?page=${page}`)
+                const formData = new FormData(document.getElementById('filters-form'));
+                const params = new URLSearchParams(formData).toString();
+
+                fetch(`/api/tasks?page=${page}&${params}`)
                     .then(response => response.json())
                     .then(data => {
                         tasksTableBody.innerHTML = '';
@@ -97,6 +124,8 @@
             }
 
             fetchTasks();
+
+            document.getElementById('apply-filters').addEventListener('click', () => fetchTasks());
         });
     </script>
 </body>

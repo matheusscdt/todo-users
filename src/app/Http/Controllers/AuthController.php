@@ -87,16 +87,21 @@ class AuthController extends Controller
      * Log out the authenticated user.
      *
      * @param \Illuminate\Http\Request $request
-     * @return \Illuminate\Http\RedirectResponse
+     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Http\JsonResponse
      */
     public function logout(Request $request)
     {
-        Auth::logout();
+        if (auth('web')->check()) {
+            auth('web')->logout();
+            $request->session()->invalidate();
+            $request->session()->regenerateToken();
+            return redirect()->route('auth.login');
+        } elseif ($request->user()) {
+            $request->user()->currentAccessToken()->delete();
+            return response()->json(['message' => 'Logged out'], 200);
+        }
 
-        $request->session()->invalidate();
-        $request->session()->regenerateToken();
-
-        return redirect()->route('auth.login');
+        return response()->json(['message' => 'Not authenticated'], 401);
     }
 
     /**

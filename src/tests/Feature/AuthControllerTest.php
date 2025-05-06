@@ -47,4 +47,34 @@ class AuthControllerTest extends TestCase
 
         $response->assertStatus(200);
     }
+
+    public function test_user_can_login_with_valid_credentials()
+    {
+        $user = User::factory()->create([
+            'password' => bcrypt('password123'),
+        ]);
+
+        $response = $this->post('/login', [
+            'email' => $user->email,
+            'password' => 'password123',
+        ]);
+
+        $response->assertRedirect('/tasks');
+        $this->assertAuthenticatedAs($user);
+    }
+
+    public function test_user_cannot_login_with_invalid_credentials()
+    {
+        $user = User::factory()->create([
+            'password' => bcrypt('password123'),
+        ]);
+
+        $response = $this->post('/login', [
+            'email' => $user->email,
+            'password' => 'wrongpassword',
+        ]);
+
+        $response->assertSessionHasErrors('email');
+        $this->assertGuest();
+    }
 }

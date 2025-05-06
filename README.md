@@ -45,6 +45,16 @@ Este é um sistema Laravel para gerenciar tarefas e usuários. O projeto foi con
 7. Acesse o sistema:
    - O sistema estará disponível em: [http://localhost:8000](http://localhost:8000)
 
+## Importante: Configuração da Chave de Criptografia
+
+Após gerar a chave do projeto com o comando:
+
+```bash
+php artisan key:generate
+```
+
+Certifique-se de atualizar a chave gerada no arquivo `.env.testing` e no arquivo `phpunit.xml` para garantir que os testes utilizem a mesma chave de criptografia. Isso é essencial para evitar erros relacionados à criptografia durante a execução dos testes.
+
 ## Estrutura do Projeto
 
 - **src/**: Contém o código-fonte do sistema Laravel.

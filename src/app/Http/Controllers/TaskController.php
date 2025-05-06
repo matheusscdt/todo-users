@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Http\Requests\TaskRequest;
 use Illuminate\Support\Facades\Auth;
 use App\Services\TaskService;
+use Illuminate\Contracts\View\View;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Gate;
 
@@ -46,6 +47,16 @@ class TaskController extends Controller
     }
 
     /**
+     * Show the form for creating a new task.
+     *
+     * @return \Illuminate\View\View
+     */
+    public function create()
+    {
+        return view('tasks.create');
+    }
+
+    /**
      * Store a newly created task in storage.
      *
      * @param \App\Http\Requests\TaskRequest $request
@@ -54,10 +65,11 @@ class TaskController extends Controller
     public function store(TaskRequest $request)
     {
         $data = $request->validated();
-        $data['user_id'] = Auth::user()->id;
+        $data['user_id'] = Auth::id();
 
-        $task = $this->taskService->createTask($data);
-        return response()->json($task, 201);
+        Task::create($data);
+
+        return redirect()->route('tasks.tasks');
     }
 
     /**
@@ -80,7 +92,7 @@ class TaskController extends Controller
      * @param int $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit($id): View
     {
         $task = Task::findOrFail($id);
         $this->authorize('update', $task);

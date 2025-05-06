@@ -23,6 +23,9 @@
                                 {{ session('error') }}
                             </div>
                         @endif
+                        <div class="mb-3 text-end">
+                            <a href="{{ route('tasks.create') }}" class="btn btn-success">Create Task</a>
+                        </div>
                         <table class="table table-striped">
                             <thead>
                                 <tr>

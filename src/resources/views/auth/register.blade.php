@@ -13,6 +13,16 @@
                 <div class="card">
                     <div class="card-header text-center">Register</div>
                     <div class="card-body">
+                        @if ($errors->any())
+                            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                <ul>
+                                    @foreach ($errors->all() as $error)
+                                        <li>{{ $error }}</li>
+                                    @endforeach
+                                </ul>
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                            </div>
+                        @endif
                         <form method="POST" action="{{ route('register.process') }}">
                             @csrf
                             <div class="mb-3">
@@ -35,6 +45,9 @@
                                 <button type="submit" class="btn btn-primary">Register</button>
                             </div>
                         </form>
+                        <div class="text-center mt-3">
+                            <a href="{{ route('auth.login') }}">Login</a>
+                        </div>
                     </div>
                 </div>
             </div>

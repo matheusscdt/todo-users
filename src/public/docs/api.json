@@ -127,10 +127,10 @@
                 }
             }
         },
-        "/logout": {
+        "/logoutApi": {
             "post": {
-                "operationId": "auth.logout",
-                "summary": "Log out the authenticated user",
+                "operationId": "auth.logoutApi",
+                "summary": "Log out the authenticated user via API",
                 "tags": [
                     "Auth"
                 ],
@@ -156,6 +156,46 @@
                     },
                     "401": {
                         "$ref": "#/components/responses/AuthenticationException"
+                    }
+                }
+            }
+        },
+        "/logout": {
+            "post": {
+                "operationId": "auth.logout",
+                "summary": "Log out the authenticated user",
+                "tags": [
+                    "Auth"
+                ],
+                "responses": {
+                    "401": {
+                        "$ref": "#/components/responses/AuthenticationException"
+                    },
+                    "200": {
+                        "description": "",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "anyOf": [
+                                        {
+                                            "type": "object",
+                                            "properties": {
+                                                "message": {
+                                                    "type": "string",
+                                                    "example": "Logged out"
+                                                }
+                                            },
+                                            "required": [
+                                                "message"
+                                            ]
+                                        },
+                                        {
+                                            "type": "string"
+                                        }
+                                    ]
+                                }
+                            }
+                        }
                     }
                 }
             }

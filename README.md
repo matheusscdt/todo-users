@@ -11,7 +11,7 @@ Este é um sistema Laravel para gerenciar tarefas e usuários. O projeto foi con
 
 1. Clone o repositório:
    ```bash
-   git clone <URL_DO_REPOSITORIO>
+   git clone https://github.com/matheusscdt/todo-users.git
    cd todo-users
    ```
 
@@ -50,6 +50,18 @@ Este é um sistema Laravel para gerenciar tarefas e usuários. O projeto foi con
 - **src/**: Contém o código-fonte do sistema Laravel.
 - **docker-compose.yml**: Configuração do Docker Compose para o ambiente de desenvolvimento.
 - **Dockerfile**: Configuração do container Docker para a aplicação Laravel.
+
+## Rotas da Documentação
+
+O projeto inclui duas rotas para acessar a documentação da API:
+
+1. **Documentação em JSON**:
+   - URL: [http://localhost:8000/api/documentation](http://localhost:8000/api/documentation)
+   - Descrição: Retorna o arquivo `api.json` gerado pelo Scramble, contendo a especificação OpenAPI da API.
+
+2. **Interface Interativa**:
+   - URL: [http://localhost:8000/api/docs](http://localhost:8000/api/docs)
+   - Descrição: Exibe a documentação da API em uma interface interativa utilizando o Stoplight Elements.
 
 ## Testes
 

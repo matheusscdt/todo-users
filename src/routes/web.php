@@ -18,7 +18,7 @@ Route::middleware(['web'])->group(function () {
     Route::put('/tasks/{id}', [TaskController::class, 'update'])->name('tasks.update');
     Route::delete('/tasks/{id}', [TaskController::class, 'destroy'])->name('tasks.destroy');
 
-    Route::get('logout', [AuthController::class, 'logout'])->name('auth.logout');
+    Route::post('logout', [AuthController::class, 'logout'])->name('auth.logout');
 });
 
 Route::get('/api/tasks', [TaskController::class, 'index'])->name('api.tasks');

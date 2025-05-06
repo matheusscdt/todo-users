@@ -12,6 +12,14 @@
     </style>
 </head>
 <body>
+    <div style="position: absolute; top: 10px; right: 10px;">
+        <form action="{{ route('auth.logout') }}" method="POST">
+            @csrf
+            <button type="submit" style="background-color: red; color: white; border: none; padding: 10px 20px; cursor: pointer;">
+                Logout
+            </button>
+        </form>
+    </div>
     <div class="container mt-5">
         <div class="row justify-content-center">
             <div class="col-md-12">

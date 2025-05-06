@@ -87,9 +87,25 @@ class AuthController extends Controller
      * Log out the authenticated user.
      *
      * @param \Illuminate\Http\Request $request
-     * @return \Illuminate\Http\JsonResponse
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function logout(Request $request)
+    {
+        Auth::logout();
+
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+
+        return redirect()->route('auth.login');
+    }
+
+    /**
+     * Log out the authenticated user via API.
+     *
+     * @param \Illuminate\Http\Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function logoutApi(Request $request)
     {
         $request->user()->currentAccessToken()->delete();
 

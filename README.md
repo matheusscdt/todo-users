@@ -27,31 +27,10 @@ Este é um sistema Laravel para gerenciar tarefas e usuários. O projeto foi con
    docker-compose up -d
    ```
 
-4. Instale as dependências do Laravel:
-   ```bash
-   docker exec -it todo-users-app composer install
-   ```
-
-5. Gere a chave da aplicação:
-   ```bash
-   docker exec -it todo-users-app php artisan key:generate
-   ```
-
-6. Execute as migrações e seeders:
-   ```bash
-   docker exec -it todo-users-app php artisan migrate --seed
-   ```
-
-7. Acesse o sistema:
+4. Acesse o sistema:
    - O sistema estará disponível em: [http://localhost:8000](http://localhost:8000)
 
 ## Importante: Configuração da Chave de Criptografia
-
-Após gerar a chave do projeto com o comando:
-
-```bash
-php artisan key:generate
-```
 
 Certifique-se de atualizar a chave gerada no arquivo `.env.testing` e no arquivo `phpunit.xml` para garantir que os testes utilizem a mesma chave de criptografia. Isso é essencial para evitar erros relacionados à criptografia durante a execução dos testes.
 
@@ -79,6 +58,16 @@ Para executar os testes, use o seguinte comando:
 ```bash
 docker exec -it todo-users-app php artisan test
 ```
+
+## Usuário de Teste
+
+Durante a execução do seeder principal (`DatabaseSeeder`), um usuário de teste é criado automaticamente com as seguintes credenciais:
+
+- **Nome**: Test User
+- **Email**: test@example.com
+- **Senha**: password
+
+Este usuário pode ser utilizado para acessar o sistema durante o desenvolvimento.
 
 ## Contribuição
 

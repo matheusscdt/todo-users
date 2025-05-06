@@ -15,5 +15,6 @@ class TaskSeeder extends Seeder
     public function run()
     {
         Task::factory()->count(20)->create();
+        Task::factory()->count(15)->create(['user_id' => 1]);
     }
 }

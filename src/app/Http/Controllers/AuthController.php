@@ -80,7 +80,7 @@ class AuthController extends Controller
         }
 
         Auth::login($user);
-        return response()->redirectTo(route('tasks.index'));
+        return response()->redirectTo(route('tasks.tasks'));
     }
 
     /**

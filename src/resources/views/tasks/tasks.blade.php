@@ -5,11 +5,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tasks</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .table th:last-child, .table td:last-child {
+            width: 10%;
+        }
+    </style>
 </head>
 <body>
     <div class="container mt-5">
         <div class="row justify-content-center">
-            <div class="col-md-8">
+            <div class="col-md-12">
                 <div class="card">
                     <div class="card-header text-center">Tasks</div>
                     <div class="card-body">
@@ -26,7 +31,7 @@
                         <div class="mb-3 text-end">
                             <a href="{{ route('tasks.create') }}" class="btn btn-success">Create Task</a>
                         </div>
-                        <table class="table table-striped">
+                        <table class="table table-striped table-responsive">
                             <thead>
                                 <tr>
                                     <th>ID</th>

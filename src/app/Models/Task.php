@@ -36,4 +36,14 @@ class Task extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    public function getDueDateAttribute($value)
+    {
+        return $value ? date('d/m/Y', strtotime($value)) : null;
+    }
+
+    public function setDueDateAttribute($value)
+    {
+        $this->attributes['due_date'] = $value ? date('Y-m-d', strtotime(str_replace('/', '-', $value))) : null;
+    }
 }

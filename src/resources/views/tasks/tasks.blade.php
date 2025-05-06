@@ -33,6 +33,7 @@
                                     <th>Title</th>
                                     <th>Description</th>
                                     <th>Status</th>
+                                    <th>Due Date</th>
                                     <th>Actions</th>
                                 </tr>
                             </thead>
@@ -43,6 +44,7 @@
                                         <td>{{ $task->title }}</td>
                                         <td>{{ $task->description }}</td>
                                         <td>{{ $task->status }}</td>
+                                        <td>{{ $task->due_date }}</td>
                                         <td>
                                             <a href="/tasks/{{ $task->id }}/edit" class="btn btn-sm btn-warning">Edit</a>
                                             <form action="/tasks/{{ $task->id }}" method="POST" style="display:inline;">

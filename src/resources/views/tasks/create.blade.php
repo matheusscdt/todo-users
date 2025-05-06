@@ -40,6 +40,10 @@
                                     <option value="completed" {{ old('status') === 'completed' ? 'selected' : '' }}>Completed</option>
                                 </select>
                             </div>
+                            <div class="mb-3">
+                                <label for="due_date" class="form-label">Due Date</label>
+                                <input type="date" class="form-control" id="due_date" name="due_date" value="{{ old('due_date') }}">
+                            </div>
                             <button type="submit" class="btn btn-primary">Create Task</button>
                             <a href="/tasks" class="btn btn-secondary">Cancel</a>
                         </form>

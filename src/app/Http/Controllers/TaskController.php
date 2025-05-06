@@ -7,12 +7,15 @@ use Illuminate\Http\Request;
 use App\Http\Requests\TaskRequest;
 use Illuminate\Support\Facades\Auth;
 use App\Services\TaskService;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Gate;
 
 /**
  * Class TaskController
  *
  * Handles operations related to tasks.
  */
+
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
 class TaskController extends Controller
@@ -33,8 +36,13 @@ class TaskController extends Controller
      */
     public function index()
     {
+        if (!Auth::check()) {
+            return response(redirect()->route('welcome')->with('error', 'You must be logged in to view tasks.'));
+        }
+
         $tasks = Task::where('user_id', Auth::id())->get();
-        return response()->view('tasks.index', ['tasks' => $tasks]);
+
+        return response()->json(['tasks' => $tasks]);
     }
 
     /**
@@ -67,6 +75,20 @@ class TaskController extends Controller
     }
 
     /**
+     * Show the form for editing the specified task.
+     *
+     * @param int $id
+     * @return \Illuminate\Http\Response
+     */
+    public function edit($id)
+    {
+        $task = Task::findOrFail($id);
+        $this->authorize('update', $task);
+
+        return view('tasks.edit', compact('task'));
+    }
+
+    /**
      * Update the specified task in storage.
      *
      * @param \App\Http\Requests\TaskRequest $request
@@ -76,8 +98,14 @@ class TaskController extends Controller
     public function update(TaskRequest $request, $id)
     {
         $task = Task::findOrFail($id);
+
+        if (Gate::denies('update', $task)) {
+            return response()->json(['error' => 'You are not authorized to update this task.'], 403);
+        }
+
         $task->update($request->validated());
-        return response()->json($task);
+
+        return redirect()->route('tasks.tasks');
     }
 
     /**
@@ -91,7 +119,18 @@ class TaskController extends Controller
         $task = Task::findOrFail($id);
         $this->authorize('delete', $task);
 
-        $this->taskService->deleteTask($task);
-        return response()->json(['message' => 'Task deleted successfully']);
+        $task->delete();
+        return redirect()->route('tasks.tasks');
+    }
+
+    /**
+     * Show the tasks view.
+     *
+     * @return \Illuminate\View\View
+     */
+    public function showTasks()
+    {
+        $tasks = Task::where('user_id', Auth::id())->get();
+        return view('tasks.tasks', compact('tasks'));
     }
 }

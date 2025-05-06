@@ -16,9 +16,9 @@ use Illuminate\Auth\Middleware\Authorize;
 use Illuminate\Auth\Middleware\RequirePassword;
 use Illuminate\Routing\Middleware\ValidateSignature;
 use Illuminate\Auth\Middleware\EnsureEmailIsVerified;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Auth;
 use Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful;
+use Laravel\Sanctum\Http\Middleware\AuthenticateSession;
+use App\Http\Middleware\SyncUserSession;
 
 class Kernel extends HttpKernel
 {
@@ -50,11 +50,16 @@ class Kernel extends HttpKernel
             ShareErrorsFromSession::class,
             \App\Http\Middleware\VerifyCsrfToken::class,
             SubstituteBindings::class,
+            AuthenticateSession::class,
+            SyncUserSession::class,
+            EnsureFrontendRequestsAreStateful::class,
         ],
 
         'api' => [
+            EnsureFrontendRequestsAreStateful::class,
             'throttle:api',
             SubstituteBindings::class,
+            StartSession::class,
         ],
     ];
 

@@ -27,14 +27,14 @@ class TaskController extends Controller
     }
 
     /**
-     * Display a listing of the tasks.
+     * Display a listing of the tasks for the logged-in user.
      *
      * @return \Illuminate\Http\Response
      */
     public function index()
     {
-        $tasks = Task::with('user')->get();
-        return response()->json($tasks);
+        $tasks = Task::where('user_id', Auth::id())->get();
+        return response()->view('tasks.index', ['tasks' => $tasks]);
     }
 
     /**

@@ -44,6 +44,12 @@ class Task extends Model
 
     public function setDueDateAttribute($value)
     {
-        $this->attributes['due_date'] = $value ? date('Y-m-d', strtotime(str_replace('/', '-', $value))) : null;
+        if ($value instanceof \DateTime) {
+            $this->attributes['due_date'] = $value->format('Y-m-d');
+        } elseif (is_string($value)) {
+            $this->attributes['due_date'] = date('Y-m-d', strtotime(str_replace('/', '-', $value)));
+        } else {
+            $this->attributes['due_date'] = null;
+        }
     }
 }

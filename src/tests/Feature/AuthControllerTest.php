@@ -28,7 +28,7 @@ class AuthControllerTest extends TestCase
             'password' => bcrypt('password'),
         ]);
 
-        $response = $this->postJson('/api/login', [
+        $response = $this->postJson('/api/loginApi', [
             'email' => $user->email,
             'password' => 'password',
         ]);
@@ -43,7 +43,7 @@ class AuthControllerTest extends TestCase
         $token = $user->createToken('auth_token')->plainTextToken;
 
         $response = $this->withHeader('Authorization', "Bearer $token")
-                         ->postJson('/api/logout');
+            ->postJson('/api/logout');
 
         $response->assertStatus(200);
     }

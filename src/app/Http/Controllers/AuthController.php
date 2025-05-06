@@ -1,8 +1,10 @@
 <?php
+
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\User;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
 
@@ -42,7 +44,7 @@ class AuthController extends Controller
      * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function login(Request $request)
+    public function loginApi(Request $request)
     {
         $request->validate([
             'email' => 'required|string|email',
@@ -62,6 +64,25 @@ class AuthController extends Controller
         return response()->json(['token' => $token], 200);
     }
 
+    public function login(Request $request)
+    {
+        $request->validate([
+            'email' => 'required|string|email',
+            'password' => 'required|string',
+        ]);
+
+        $user = User::where('email', $request->email)->first();
+
+        if (!$user || !Hash::check($request->password, $user->password)) {
+            throw ValidationException::withMessages([
+                'email' => ['The provided credentials are incorrect.'],
+            ]);
+        }
+
+        Auth::login($user);
+        return response()->redirectTo(route('tasks.index'));
+    }
+
     /**
      * Log out the authenticated user.
      *
@@ -73,5 +94,25 @@ class AuthController extends Controller
         $request->user()->currentAccessToken()->delete();
 
         return response()->json(['message' => 'Logged out'], 200);
+    }
+
+    /**
+     * Show the login view.
+     *
+     * @return \Illuminate\View\View
+     */
+    public function showLogin()
+    {
+        return view('auth.login');
+    }
+
+    /**
+     * Show the register view.
+     *
+     * @return \Illuminate\View\View
+     */
+    public function showRegister()
+    {
+        return view('auth.register');
     }
 }
